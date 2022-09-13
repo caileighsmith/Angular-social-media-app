@@ -9,7 +9,7 @@ import {Component} from "@angular/core"
 export class PostListComponent{
     posts = [
         {
-            title: 'first Post',
+            title: 'First Post',
             content: 'This is the first post'
         },
         {
@@ -21,4 +21,5 @@ export class PostListComponent{
             content: 'This is the Third post'
         }
     ];
+    
 }
