@@ -10,14 +10,19 @@ export class PostCreateComponent {
     //assinging properties
     enteredTitle = '';
     enteredContent = '';
-    @Output() postCreated = new EventEmitter();
+    @Output() postCreated = new EventEmitter(); //Output() allows the event to be listened to from the outside.
 
     onAddPost(){
-        const post = {
-            title: this.enteredTitle,
-            content: this.enteredContent
-        };
-        this.postCreated.emit(post)
+        if (this.enteredContent.length>0 && this.enteredTitle.length > 0){
+            const post = { //creating a post to push.
+                title: this.enteredTitle,
+                content: this.enteredContent
+            };
+            this.postCreated.emit(post)
+        }else{
+            
+        }
+        
 
     };
 
