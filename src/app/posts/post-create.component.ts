@@ -1,8 +1,9 @@
 import { formatPercent } from "@angular/common";
-import { Component, EventEmitter, Output} from "@angular/core";
+import { Component} from "@angular/core";
 import { NgForm } from "@angular/forms";
 
 import { Post } from "./posts.model";
+import { PostsService } from "./posts.service";
 
 @Component({
     selector: 'app-post-create',
@@ -13,7 +14,9 @@ export class PostCreateComponent {
     //assinging properties
     enteredTitle = '';
     enteredContent = '';
-    @Output() postCreated = new EventEmitter<Post>(); //Output() allows the event to be listened to from the outside.
+
+    constructor(public postsService: PostsService) {}
+
 
     onAddPost(form: NgForm){
         if (form.invalid){
@@ -23,7 +26,7 @@ export class PostCreateComponent {
             title: form.value.postTitle,
             content: form.value.postContent
         };
-        this.postCreated.emit(post)
+        this.postsService.addPost(post )
         
 
     };
