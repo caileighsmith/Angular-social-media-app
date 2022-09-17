@@ -1,4 +1,6 @@
+import { formatPercent } from "@angular/common";
 import { Component, EventEmitter, Output} from "@angular/core";
+import { NgForm } from "@angular/forms";
 
 import { Post } from "./posts.model";
 
@@ -13,16 +15,15 @@ export class PostCreateComponent {
     enteredContent = '';
     @Output() postCreated = new EventEmitter<Post>(); //Output() allows the event to be listened to from the outside.
 
-    onAddPost(){
-        if (this.enteredContent.length>0 && this.enteredTitle.length > 0){
-            const post:Post = { //creating a post to push.
-                title: this.enteredTitle,
-                content: this.enteredContent
-            };
-            this.postCreated.emit(post)
-        }else{
-
+    onAddPost(form: NgForm){
+        if (form.invalid){
+            return
         }
+        const post:Post = { //creating a post to push.
+            title: form.value.postTitle,
+            content: form.value.postContent
+        };
+        this.postCreated.emit(post)
         
 
     };
