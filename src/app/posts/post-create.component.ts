@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output} from "@angular/core";
 
+import { Post } from "./posts.model";
 
 @Component({
     selector: 'app-post-create',
@@ -10,17 +11,17 @@ export class PostCreateComponent {
     //assinging properties
     enteredTitle = '';
     enteredContent = '';
-    @Output() postCreated = new EventEmitter(); //Output() allows the event to be listened to from the outside.
+    @Output() postCreated = new EventEmitter<Post>(); //Output() allows the event to be listened to from the outside.
 
     onAddPost(){
         if (this.enteredContent.length>0 && this.enteredTitle.length > 0){
-            const post = { //creating a post to push.
+            const post:Post = { //creating a post to push.
                 title: this.enteredTitle,
                 content: this.enteredContent
             };
             this.postCreated.emit(post)
         }else{
-            
+
         }
         
 
