@@ -42,6 +42,13 @@ export class PostListComponent implements OnInit, OnDestroy{
             }); //observables. Updating the list of posts.
         }
 
+    onDelete(postId: string){
+        this.postsService.deletePost(postId)
+    }
+
+    
+
+
     ngOnDestroy(): void {
         this.postsSub.unsubscribe(); //ensuring no memory leak. Unsubscriped when this component isn't being used.
     }
