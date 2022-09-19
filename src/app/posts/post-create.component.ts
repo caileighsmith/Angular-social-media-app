@@ -23,6 +23,7 @@ export class PostCreateComponent {
             return
         }
         const post:Post = { //creating a post to push.
+            id: 'null',
             title: form.value.postTitle,
             content: form.value.postContent
         };
