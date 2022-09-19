@@ -1,4 +1,6 @@
 
+<p style="text-align:center;" *ngIf="posts.length != 0">Posts:</p>
+
 <mat-accordion multi="true" *ngIf="posts.length > 0">
     <mat-expansion-panel *ngFor="let post of posts">
         <mat-expansion-panel-header>

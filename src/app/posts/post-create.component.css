@@ -4,3 +4,7 @@ textarea{
     width: 100%;
 
 }
+
+mat-card{
+    margin-top: 2.5rem;
+}
