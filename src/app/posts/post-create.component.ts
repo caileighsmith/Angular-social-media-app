@@ -27,7 +27,7 @@ export class PostCreateComponent {
             content: form.value.postContent
         };
         this.postsService.addPost(post) //adding a new post, taking the new post Object as a param.
-        
+        form.resetForm()
 
     };
 
