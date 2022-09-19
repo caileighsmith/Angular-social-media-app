@@ -1,5 +1,5 @@
 import { Post } from "./posts.model";
-import { Subject } from 'rxjs';
+import { Subject, throttle } from 'rxjs';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map } from "rxjs";
@@ -31,7 +31,12 @@ export class PostsService{
         return this.postsUpdated.asObservable();
     }
 
-    addPost(post:Post){
+    getPost(id: string) {
+        return {...this.posts.find(p => p['_id'] === id)};
+    }
+
+    addPost(title: string, content: string){
+        const post: Post = {_id: null, title: title, content:content}
         this.httpClient.post<{message: string, postId: string}>('http://localhost:3000/api/posts', post).subscribe((responseData)=>{
             const postId = responseData.postId
             post['_id'] = postId;
@@ -40,6 +45,18 @@ export class PostsService{
             this.postsUpdated.next([...this.posts])
         });
         
+    }
+
+    updatePost(id: string, title: string, content: string){
+        const post: Post = {
+            _id: id,
+            title: title,
+            content: content
+        }
+        this.httpClient.put("http://localhost:3000/api/posts/"+ id, post).subscribe(
+            response=> console.log(response)
+        )
+    
     }
 
     deletePost(postId:string){

@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use((req, res, next)=>{
     res.setHeader('Access-Control-Allow-Origin', "*") //Allowing cross-domain access,
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
     next();
 }); //applied to all incoming reqs
 
@@ -41,6 +41,19 @@ app.post("/api/posts", (req, res, next)=>{
     });
     })
     
+
+app.put('/api/posts/:id', (req, res, next)=>{
+    const post =({
+        _id: req.body._id,
+        title: req.body.title,
+        content: req.body.content
+    })
+    console.log('id:',req.params.id)
+    Post.updateOne({_id: req.body._id}, post).then(result =>{
+        console.log(result)
+        res.json({message: 'successful update.'})
+    })
+})
 
 
 app.get('/api/posts', (req, res, next)=>{
