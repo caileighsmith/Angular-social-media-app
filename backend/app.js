@@ -1,7 +1,18 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+
+const Post = require('./models/post.model')
 
 const app = express();
+
+mongoose.connect('mongodb+srv://cai:AL6gVCHbdWwyEK59@cluster0.xibglw0.mongodb.net/node-angular?retryWrites=true&w=majority')
+    .then(()=>{
+        console.log('successful database connection made.')
+    })
+    .catch(()=>{
+        console.log('unsuccesful database connection, try again.')
+    })
 
 app.use(bodyParser.json()); //middlewear applies to all below.
 app.use(bodyParser.urlencoded({extended: false}));
@@ -13,9 +24,14 @@ app.use((req, res, next)=>{
     next();
 }); //applied to all incoming reqs
 
+
+//post api
 app.post("/api/posts", (req, res, next)=>{
-    const postPayload = req.body;
-    console.log(postPayload);
+    const postPayload = new Post({
+        title: req.body.title,
+        content: req.body.content
+    })
+    postPayload.save()
     res.status(201).json({
         message: 'successful post add.'
     }
@@ -24,22 +40,16 @@ app.post("/api/posts", (req, res, next)=>{
 
 
 app.get('/api/posts', (req, res, next)=>{
-    const posts = [
-        {
-            id: '12345',
-            title: 'first post',
-            content: 'this is some content.'
-        },
-        {
-            id: '12345',
-            title: 'first post',
-            content: 'this is some content.'
-        },
-        
-    ];
-    res.json({
-        posts: posts
-    })
+    Post.find()
+        .then(documents =>{
+            console.log(documents)
+            res.json({
+                posts: documents
+            })
+        })
+
+    
+    
 })
 
 

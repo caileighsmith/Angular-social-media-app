@@ -2,6 +2,7 @@ import { Post } from "./posts.model";
 import { Subject } from 'rxjs';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { map } from "rxjs";
 
 @Injectable()
 export class PostsService{
@@ -13,9 +14,11 @@ export class PostsService{
 
     getPosts(){
         //return [...this.posts]; //using '...' to create a new array with the old objects. a copy. Reasoning: Changing this array will not effect the private array initialised in the PostSerice class.
-        this.httpClient.get<{posts: Post[]}>('http://localhost:3000/api/posts').subscribe( (postData)=>{
-            this.posts = postData.posts;
-            this.postsUpdated.next([...this.posts]);
+        this.httpClient
+            .get<{posts: Post[]}>('http://localhost:3000/api/posts')
+            .subscribe( (postData)=>{
+                this.posts = postData.posts;
+                this.postsUpdated.next([...this.posts]);
         } );
     }
 
