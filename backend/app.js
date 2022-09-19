@@ -31,12 +31,16 @@ app.post("/api/posts", (req, res, next)=>{
         title: req.body.title,
         content: req.body.content
     })
-    postPayload.save()
-    res.status(201).json({
-        message: 'successful post add.'
-    }
-    );
-});
+    postPayload.save().then(result=>{
+        console.log(result)
+        res.status(201).json({
+            message: 'successful post add.',
+            postId: result._id
+        }
+        );
+    });
+    })
+    
 
 
 app.get('/api/posts', (req, res, next)=>{
