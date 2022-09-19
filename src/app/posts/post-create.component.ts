@@ -45,14 +45,14 @@ export class PostCreateComponent implements OnInit{
         
         if (this.mode === 'create'){
             this.postsService.addPost(form.value.title, form.value.content)
-
+            form.resetForm()
         }else{
-            console.log('title:', form.value.postTitle)
-            console.log('content',form.value.postContent)
+            console.log('New title:', form.value.postTitle)
+            console.log('New content',form.value.postContent)
             this.postsService.updatePost(this.postId, form.value.postTitle, form.value.postContent)
         }
 
-        form.resetForm()
+        
 
     };
 
