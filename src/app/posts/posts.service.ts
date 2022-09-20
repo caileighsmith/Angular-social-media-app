@@ -13,6 +13,7 @@ export class PostsService{
     constructor(private httpClient: HttpClient, private router: Router){}
 
     redirectTo(target: string){
+        //Use to redirect the page to the target, string. Example redirectTo('/') -- redirects to root.
         this.router.navigate([target]);
 
     }
