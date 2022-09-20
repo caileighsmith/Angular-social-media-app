@@ -15,6 +15,7 @@ export class PostCreateComponent implements OnInit{
     //assinging properties
     enteredTitle = '';
     enteredContent = '';
+    isLoading = false;
 
     private mode = 'create'
     private postId: string;
@@ -28,7 +29,9 @@ export class PostCreateComponent implements OnInit{
                 console.log('editing')
                 this.mode = 'edit'; //setting mode to edit if there is a given id.
                 this.postId = paramMap.get('postId')
+                this.isLoading = true;  
                 this.postsService.getPost(this.postId).subscribe(postData=>{
+                    this.isLoading = false;
                     this.post = {_id: postData._id, title: postData.title, content: postData.content}
                 });
 
@@ -44,7 +47,7 @@ export class PostCreateComponent implements OnInit{
         if (form.invalid){
             return
         }
-        
+        this.isLoading = true;
         if (this.mode === 'create'){
             this.postsService.addPost(form.value.postTitle, form.value.postContent)
             form.resetForm()

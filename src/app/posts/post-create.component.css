@@ -8,3 +8,8 @@ textarea{
 mat-card{
     margin-top: 2.5rem;
 }
+
+mat-spinner{
+    margin: auto;
+
+}
