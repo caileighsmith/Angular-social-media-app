@@ -12,6 +12,10 @@ export class PostsService{
 
     constructor(private httpClient: HttpClient, private router: Router){}
 
+    redirectTo(target: string){
+        this.router.navigate([target]);
+
+    }
 
     getPosts(){
         //return [...this.posts]; //using '...' to create a new array with the old objects. a copy. Reasoning: Changing this array will not effect the private array initialised in the PostSerice class.
@@ -44,6 +48,7 @@ export class PostsService{
             console.log(responseData.message)
             this.posts.push(post)
             this.postsUpdated.next([...this.posts])
+            this.redirectTo('/')
         });
         
     }
@@ -61,6 +66,8 @@ export class PostsService{
                 updatedPosts[indexOldPost] = post; //setting the old post to the updated one.
                 this.posts = updatedPosts; //setting the private posts array to the updated array.
                 this.postsUpdated.next([...this.posts]) //adding the updated post.
+                this.redirectTo('/')
+
             }
         )
     
