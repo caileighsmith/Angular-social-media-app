@@ -28,7 +28,9 @@ export class PostCreateComponent implements OnInit{
                 console.log('editing')
                 this.mode = 'edit'; //setting mode to edit if there is a given id.
                 this.postId = paramMap.get('postId')
-                this.post = this.postsService.getPost(this.postId)
+                this.postsService.getPost(this.postId).subscribe(postData=>{
+                    this.post = {_id: postData._id, title: postData.title, content: postData.content}
+                });
 
             }else{
                 console.log('creating')
@@ -44,7 +46,7 @@ export class PostCreateComponent implements OnInit{
         }
         
         if (this.mode === 'create'){
-            this.postsService.addPost(form.value.title, form.value.content)
+            this.postsService.addPost(form.value.postTitle, form.value.postContent)
             form.resetForm()
         }else{
             console.log('New title:', form.value.postTitle)

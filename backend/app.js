@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
 const Post = require('./models/post.model')
+const postRoutes = require('./routes/posts-routes')
 
 const app = express();
 
@@ -17,67 +18,7 @@ mongoose.connect('mongodb+srv://cai:AL6gVCHbdWwyEK59@cluster0.xibglw0.mongodb.ne
 app.use(bodyParser.json()); //middlewear applies to all below.
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.use((req, res, next)=>{
-    res.setHeader('Access-Control-Allow-Origin', "*") //Allowing cross-domain access,
-    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-    next();
-}); //applied to all incoming reqs
-
-
-//post api
-app.post("/api/posts", (req, res, next)=>{
-    const postPayload = new Post({
-        title: req.body.title,
-        content: req.body.content
-    })
-    postPayload.save().then(result=>{
-        console.log(result)
-        res.status(201).json({
-            message: 'successful post add.',
-            postId: result._id
-        }
-        );
-    });
-    })
-    
-
-app.put('/api/posts/:id', (req, res, next)=>{
-    const post =({
-        _id: req.body._id,
-        title: req.body.title,
-        content: req.body.content
-    })
-    console.log('id:',req.params.id)
-    Post.updateOne({_id: req.body._id}, post).then(result =>{
-        console.log(result)
-        res.json({message: 'successful update.'})
-    })
-})
-
-
-app.get('/api/posts', (req, res, next)=>{
-    Post.find()
-        .then(documents =>{
-            console.log(documents)
-            res.json({
-                posts: documents
-            })
-        })
-
-    
-    
-})
-
-app.delete("/api/posts/:id", (req, res, next)=>{
-    Post.deleteOne({
-        _id: req.params.id
-    }).then(result=>{
-        console.log(result)
-        res.json({message: 'Post successfully deleted.'})
-    })
-    
-})
+app.use('/api/posts',postRoutes)
 
 
 module.exports = app;

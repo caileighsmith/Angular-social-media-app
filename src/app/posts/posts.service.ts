@@ -32,7 +32,7 @@ export class PostsService{
     }
 
     getPost(id: string) {
-        return {...this.posts.find(p => p['_id'] === id)};
+        return this.httpClient.get<{_id: string, title: string, content: string}>('http://localhost:3000/api/posts/' +id);
     }
 
     addPost(title: string, content: string){
@@ -54,7 +54,13 @@ export class PostsService{
             content: content
         }
         this.httpClient.put("http://localhost:3000/api/posts/"+ id, post).subscribe(
-            response=> console.log(response)
+            response=> {
+                const updatedPosts = [...this.posts] //creating a mutable clone
+                const indexOldPost = updatedPosts.findIndex(p => p._id === post._id) //getting index of target post.
+                updatedPosts[indexOldPost] = post; //setting the old post to the updated one.
+                this.posts = updatedPosts; //setting the private posts array to the updated array.
+                this.postsUpdated.next([...this.posts]) //adding the updated post.
+            }
         )
     
     }
