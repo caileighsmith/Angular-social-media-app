@@ -8,7 +8,7 @@ import { Router } from "@angular/router";
 @Injectable()
 export class PostsService{
     private posts: Post[] = []; //private as we do not want it to be edited from outside.
-    private postsUpdated = new Subject<Post[]>()
+    private postsUpdated = new Subject<{posts: Post[], postCount: number}>()
 
     constructor(private httpClient: HttpClient, private router: Router){}
 
@@ -18,25 +18,31 @@ export class PostsService{
 
     }
 
-    getPosts(){
+    getPosts(pagesize: number, page: number){
+        const queryParams = `?pagesize=${pagesize}&page=${page}`;
+
         //return [...this.posts]; //using '...' to create a new array with the old objects. a copy. Reasoning: Changing this array will not effect the private array initialised in the PostSerice class.
         this.httpClient
-            .get<{posts: Post[]}>('http://localhost:3000/api/posts')
+            .get<{posts: Post[], maxPosts: number}>('http://localhost:3000/api/posts' + queryParams)
             .pipe(
                 map(postData=>{
-                    return postData.posts.map(post => {
+                    return { posts: postData.posts.map(post => {
                         return {
                             title: post.title,
                             content: post.content,
                             _id: post._id,
                             imagePath: post.imagePath
                         }
-                    })
+                    }), maxposts: postData.maxPosts
+                }
                 })
             )
-            .subscribe( (transformedPosts)=>{
-                this.posts = transformedPosts;
-                this.postsUpdated.next([...this.posts]);
+            .subscribe( (transformedPostData)=>{
+                this.posts = transformedPostData.posts;
+                this.postsUpdated.next({
+                    posts: [...this.posts],
+                    postCount: transformedPostData.maxposts
+                });
         } );
     }
 
@@ -60,11 +66,7 @@ export class PostsService{
         postData.append('image', image, title);
         this.httpClient.post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
         .subscribe((responseData)=>{
-            const post: Post = {_id: responseData.post._id, title: title, content: content, imagePath: responseData.post.imagePath}
-            console.log(responseData.message)
-            this.posts.push(post)
-            this.postsUpdated.next([...this.posts])
-            this.redirectTo('/')
+            this.router.navigate(['/'])
         });
         
     }
@@ -90,17 +92,7 @@ export class PostsService{
 
         this.httpClient.put("http://localhost:3000/api/posts/"+ id, postData).subscribe( 
             response=> {
-                const updatedPosts = [...this.posts] //creating a mutable clone
-                const indexOldPost = updatedPosts.findIndex(p => p._id === id) //getting index of target post.
-                const post: Post = {
-                    _id: id,
-                    title: title,
-                    content: content,
-                    imagePath: ""
-                }
-                updatedPosts[indexOldPost] = post; //setting the old post to the updated one.
-                this.posts = updatedPosts; //setting the private posts array to the updated array.
-                this.postsUpdated.next([...this.posts]) //adding the updated post.
+                
                 this.router.navigate(["/"])
 
             }
@@ -109,11 +101,7 @@ export class PostsService{
     }
 
     deletePost(postId:string){
-        this.httpClient.delete('http://localhost:3000/api/posts/'+postId).subscribe(()=>{
-            const updatedPosts = this.posts.filter(post => post._id != postId)
-            this.posts = updatedPosts;
-            this.postsUpdated.next([...this.posts])
-        })
+        return this.httpClient.delete('http://localhost:3000/api/posts/'+postId)
     }
 
 

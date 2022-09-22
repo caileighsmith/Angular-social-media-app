@@ -7,6 +7,7 @@ textarea{
 
 mat-card{
     margin-top: 2.5rem;
+
 }
 
 mat-spinner{
@@ -26,3 +27,5 @@ input[type="file"]{
 .image-view img{
     height: 100%;
 }
+
+

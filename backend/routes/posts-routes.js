@@ -12,7 +12,7 @@ const MIME_TYPE_MAP = {
     'image/jpg' : 'jpg'
 }
 
-const storage = multer.diskStorage({
+const storage = multer.diskStorage({ //middleware
     destination: (req, file, callback)=>{ //function executes each time a file is saved.
         const fileIsValid = MIME_TYPE_MAP[file.mimetype]
         let error = new Error('invalid mime type')
@@ -76,6 +76,7 @@ router.put('/:id',multer({storage: storage}).single('image'), (req, res, next)=>
 
 
 router.get('/:id',(req, res, next)=>{ //fetches post(s)
+    console.log(req.query)
     Post.findById(req.params.id).then(post => {
         if (post){
             res.json(post)
@@ -87,14 +88,32 @@ router.get('/:id',(req, res, next)=>{ //fetches post(s)
 
 
 router.get('', (req, res, next)=>{
-    Post.find()
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const postQuery = Post.find()
+    let fetchedPosts;
+
+    if (pageSize && currentPage){
+        postQuery
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize)
+    }
+
+
+    postQuery
         .then(documents =>{
-            console.log(documents)
+            fetchedPosts = documents;
+            return Post.count()      
+        })
+        .then(count=>{
             res.json({
-                posts: documents
+                posts: fetchedPosts,
+                maxPosts: count
             })
         })
 })
+
+
 
 router.delete("/:id", (req, res, next)=>{
     Post.deleteOne({
