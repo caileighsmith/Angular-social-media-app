@@ -14,8 +14,9 @@ export class LoginComponent{
     constructor(public authService: AuthService){}
 
     onLogin(form :NgForm){
-        alert('w')
+
         if (form.valid){
+            this.isLoading = true
             this.authService.loginUser(form.value.email, form.value.password)
         }else{
             return
