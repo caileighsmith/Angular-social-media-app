@@ -7,7 +7,7 @@ import {MatCardModule} from '@angular/material/card'
 import {MatButtonModule} from '@angular/material/button'
 import {MatToolbarModule} from '@angular/material/toolbar'
 import {MatExpansionModule} from '@angular/material/expansion'
-import { HttpClientModule} from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http'
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner'
 import {MatPaginatorModule} from '@angular/material/paginator'
 import {MatDividerModule} from '@angular/material/divider'
@@ -21,6 +21,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
 import { PostsService } from './posts/posts.service';
 import { LoginComponent } from './auth/login/login-component';
 import { SignUpComponent } from './auth/signup/signup-component';
+import { AuthInterceptor } from './auth/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { SignUpComponent } from './auth/signup/signup-component';
     
     
   ],
-  providers: [PostsService],
+  providers: [PostsService, [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}]],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

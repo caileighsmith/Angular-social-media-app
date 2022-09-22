@@ -15,6 +15,7 @@ export class SignUpComponent{
 
     onSignup(form: NgForm){
         if (form.valid){
+            this.isLoading = true
             this.authService.registerUser(form.value.email, form.value.password)
         }else{
             return

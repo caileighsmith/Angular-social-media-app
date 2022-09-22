@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {OnDestroy} from "@angular/core"
 import { PageEvent } from "@angular/material/paginator";
 import { Subscription } from "rxjs";
+import { AuthService } from "src/app/auth/auth.service";
 
 import { Post } from "../posts.model";
 import { PostsService } from "../posts.service";
@@ -14,21 +15,7 @@ import { PostsService } from "../posts.service";
 })
 
 export class PostListComponent implements OnInit, OnDestroy{
-    // posts = [ //example data // placeholder data.
-    //     {
-    //         title: 'First Post',
-    //         content: 'This is the first post'
-    //     },
-    //     {
-    //         title: 'Second Post',
-    //         content: 'This is the Second post'
-    //     },
-    //     {
-    //         title: 'Third Post',
-    //         content: 'This is the Third post'
-    //     },
-        
-    // ];
+
     posts: Post[] = [];
     isLoading = false;
 
@@ -37,10 +24,12 @@ export class PostListComponent implements OnInit, OnDestroy{
     postsPerPage = 4
     currentPage = 1
     pageSizeOptions = [1, 2, 3, 4, 5, 10]
-
+    isAuth = false;
     private postsSub = new Subscription();
+    private authStatusSub: Subscription;
 
-    constructor(public postsService: PostsService) {}
+
+    constructor(public postsService: PostsService, private authService: AuthService) {}
 
     ngOnInit() {
         this.isLoading = true
@@ -51,7 +40,13 @@ export class PostListComponent implements OnInit, OnDestroy{
             this.isLoading = false;    
             this.posts = postData.posts;
             }); //observables. Updating the list of posts.
+
+        this.isAuth = this.authService.getIsAuth()
+        this.authStatusSub = this.authService.getAuthStatusListener().subscribe(isAuth =>{
+            this.isAuth = isAuth
+        })
         }
+
 
     onDelete(postId: string){
         this.isLoading = true
@@ -71,6 +66,7 @@ export class PostListComponent implements OnInit, OnDestroy{
 
     ngOnDestroy(): void {
         this.postsSub.unsubscribe(); //ensuring no memory leak. Unsubscriped when this component isn't being used.
+        this.authStatusSub.unsubscribe()
     }
 
 }

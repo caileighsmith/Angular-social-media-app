@@ -3,14 +3,17 @@
     <a routerLink="/"> <span>App</span></a>
     <span class="spacer"></span>
     <ul>
-        <li>
+        <li *ngIf="userIsAuth">
             <a mat-button routerLink="/create" routerLinkActive="active-link">Create post</a>
         </li>
-        <li>
+        <li *ngIf="!userIsAuth">
             <a mat-button routerLink="/login" routerLinkActive="active-link">Login</a>
         </li>
-        <li>
+        <li *ngIf="!userIsAuth">
             <a mat-button routerLink="/signup" routerLinkActive="active-link">Sign up</a>
+        </li>
+        <li *ngIf="userIsAuth">
+            <button (click)="onLogOut()" mat-raised-button>Logout</button>
         </li>
     </ul>
 
