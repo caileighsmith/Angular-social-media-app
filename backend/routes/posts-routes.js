@@ -5,6 +5,7 @@ const { createPostfix } = require('typescript')
 const router = express.Router()
 
 const Post = require('../models/post.model')
+const authWare = require('../middleware/check-auth')
 
 const MIME_TYPE_MAP = {
     'image/png': 'png',
@@ -31,7 +32,7 @@ const storage = multer.diskStorage({ //middleware
 
 
 //post api
-router.post("", multer({storage: storage}).single('image') , (req, res, next)=>{
+router.post("", authWare ,multer({storage: storage}).single('image') , (req, res, next)=>{
     const url = req.protocol + '://' + req.get("host")
     const postPayload = new Post({
         title: req.body.title,
@@ -51,7 +52,7 @@ router.post("", multer({storage: storage}).single('image') , (req, res, next)=>{
     })
 
 
-router.put('/:id',multer({storage: storage}).single('image'), (req, res, next)=>{
+router.put('/:id', authWare,multer({storage: storage}).single('image'), (req, res, next)=>{
     
     let imagePath = req.body.imagePath;
     if (req.file){
@@ -115,7 +116,7 @@ router.get('', (req, res, next)=>{
 
 
 
-router.delete("/:id", (req, res, next)=>{
+router.delete("/:id", authWare, (req, res, next)=>{
     Post.deleteOne({
         _id: req.params.id
     }).then(result=>{
