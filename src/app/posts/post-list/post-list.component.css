@@ -6,3 +6,12 @@
 mat-spinner{
     margin: auto;
 }
+
+
+.posted-image{
+    width: 100%;
+}
+
+.posted-image img{
+    width: 100%;
+}

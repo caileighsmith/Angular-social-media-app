@@ -13,3 +13,16 @@ mat-spinner{
     margin: auto;
 
 }
+
+input[type="file"]{
+    visibility: hidden;
+}
+
+.image-view{
+    height: 5rem;
+    margin: 1rem 0;
+}
+
+.image-view img{
+    height: 100%;
+}
