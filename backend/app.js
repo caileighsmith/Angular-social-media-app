@@ -5,6 +5,8 @@ const path = require('path')
 const Post = require('./models/post.model')
 const postRoutes = require('./routes/posts-routes')
 
+const userRoutes = require('./routes/user')
+
 const app = express();
 
 app.use((req, res, next)=>{
@@ -27,6 +29,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use('/images', express.static(path.join('backend/images')));
 
 app.use('/api/posts',postRoutes)
-
+app.use('/api/user', userRoutes)
 
 module.exports = app;
